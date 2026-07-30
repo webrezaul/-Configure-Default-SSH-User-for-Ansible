@@ -18,8 +18,6 @@ Standardizing server management across the stack by configuring Ansible's **defa
 
 ```
 .
-├── files/
-│   └── ansible.cfg      # Resulting default configuration file
 ├── inventory            # Standard Ansible inventory file
 ├── playbook.yml         # Playbook to automate the configuration
 ├── .gitignore           # Git ignore rules
@@ -62,7 +60,7 @@ Alternatively, you can edit `/etc/ansible/ansible.cfg` directly depending on its
   sudo sed -i 's/^[[:space:]]*#[[:space:]]*remote_user[[:space:]]*=.*/remote_user = javed/' /etc/ansible/ansible.cfg
   ```
 
-The final configured file matches the template at [files/ansible.cfg](file:///e:/Project/DevOPS/Ansible/Configure%20Default%20SSH%20User%20for%20Ansible/files/ansible.cfg).
+
 
 ---
 
