@@ -1,0 +1,20 @@
+---
+- name: Configure Default SSH User for Ansible
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Ensure Ansible configuration directory exists
+      ansible.builtin.file:
+        path: /etc/ansible
+        state: directory
+        mode: '0755'
+
+    - name: Set default remote_user to javed in /etc/ansible/ansible.cfg
+      ansible.builtin.ini_file:
+        path: /etc/ansible/ansible.cfg
+        section: defaults
+        option: remote_user
+        value: javed
+        mode: '0644'
+        create: true

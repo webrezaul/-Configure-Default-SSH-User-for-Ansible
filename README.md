@@ -10,6 +10,7 @@ Standardizing server management across the stack by configuring Ansible's **defa
 |------------|---------|---------|
 | Ansible    | `v2.9+` | Configuration management and server automation |
 | INI / Config| `N/A`   | Ansible configuration file format (`ansible.cfg`) |
+| YAML       | `1.2`   | Playbook serialization format |
 
 ---
 
@@ -19,6 +20,8 @@ Standardizing server management across the stack by configuring Ansible's **defa
 .
 ├── files/
 │   └── ansible.cfg      # Resulting default configuration file
+├── inventory            # Standard Ansible inventory file
+├── playbook.yml         # Playbook to automate the configuration
 ├── .gitignore           # Git ignore rules
 └── README.md            # Project documentation
 ```
@@ -35,21 +38,29 @@ Before configuring, ensure you have:
 
 ## 🔧 Configuration & Solution
 
-On a fresh `yum`-installed Ansible setup, the default configuration file (`/etc/ansible/ansible.cfg`) might only contain the auto-generated comment header (no active `[defaults]` section). 
+On a fresh `yum`-installed Ansible setup, the default configuration file (`/etc/ansible/ansible.cfg`) might only contain the auto-generated comment header (no active `[defaults]` section).
 
-Depending on the state of the config file, perform one of the following edits:
+### Option 1: Automation via Ansible Playbook (Recommended)
+You can automate the configuration of the default SSH user using the included playbook. Run the following command:
 
-### Option 1: Append a new `[defaults]` section (if missing)
-If no active `[defaults]` section exists, append it with `remote_user` set:
 ```bash
-sudo sed -i '$a [defaults]\nremote_user = javed' /etc/ansible/ansible.cfg
+ansible-playbook -i inventory playbook.yml
 ```
 
-### Option 2: Uncomment and update the existing `remote_user` line
-If `[defaults]` already exists with a commented-out `#remote_user = root` line, uncomment and modify it:
-```bash
-sudo sed -i 's/^[[:space:]]*#[[:space:]]*remote_user[[:space:]]*=.*/remote_user = javed/' /etc/ansible/ansible.cfg
-```
+This uses the standard `ansible.builtin.ini_file` module to safely and idempotently configure `/etc/ansible/ansible.cfg` without raw shell utilities.
+
+### Option 2: Manual command execution
+Alternatively, you can edit `/etc/ansible/ansible.cfg` directly depending on its current state:
+
+- **If no active `[defaults]` section exists**, append it with `remote_user` set:
+  ```bash
+  sudo sed -i '$a [defaults]\nremote_user = javed' /etc/ansible/ansible.cfg
+  ```
+
+- **If `[defaults]` already exists** with a commented-out `#remote_user = root` line, uncomment and modify it:
+  ```bash
+  sudo sed -i 's/^[[:space:]]*#[[:space:]]*remote_user[[:space:]]*=.*/remote_user = javed/' /etc/ansible/ansible.cfg
+  ```
 
 The final configured file matches the template at [files/ansible.cfg](file:///e:/Project/DevOPS/Ansible/Configure%20Default%20SSH%20User%20for%20Ansible/files/ansible.cfg).
 
